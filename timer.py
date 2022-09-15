@@ -1,49 +1,93 @@
+from sys import argv
 from threading import Thread
-from time import sleep, time as now
+from time import sleep
+from .model import time
+def beep():
+    global _beeping
+    _beeping = True
 
 
-class time(float) :
+def main ():
 
-    @property
-    def now (self):
-        return type(self)(now())
+    from sys import argv
+    test_time = time.from_secounds(3) if len(argv) == 1 else time.from_minutes(float(argv[1]))
+    start = time.now()
 
-    @property
-    def Asecounds (self):
-        return int(self)
+    test_start = time(0)
+
+    def stop():
+        stop_start_time = time.now()
+        m = input('\nWhat happend: ')
+        nonlocal test_start, start
+        if m in ['q','exit','quit']:
+            global _exit
+            _exit()
+        elif m in ['r','resume']:
+            test_start += stop_start_time.delta_now
+            start += stop_start_time.delta_now
+        elif m in ['','t','n','next']:
+            test_start = time.now()
+            start += stop_start_time.delta_now
+            
+
+
+    while True :
+        test_start = time.now()
+        print_time = lambda: print(f"{start.delta_now.iso()} <- {time(test_time-(time(test_start).delta_now)).iso()}",end='\r')
+
+        while test_start.delta_now < test_time :
+            checkexit()
+            try:
+                sleep(breakt.float)
+            except:
+                stop()
+        print(f'Finished: {time(((start.delta_now+time.from_secounds(0))//breakt)*breakt).iso()}  ')
+        beep()
+
+
+def checkexit():
+    global down
+    if down == True :
+        exit() 
+
+def _beep_thread():
+       
+    def beep(t=1):
+        import beepy
+        for _ in range(t): 
+            beepy.beep(sound=3)
+            checkexit()
+
+    global _beeping
+
+    while True :
+        if _beeping == True :
+            _beeping = False
+            beep(t=3)
+        sleep(breakt)
+        checkexit()
+        sleep(breakt)
+
+def _exit():
+    global down
     
-    @property
-    def secounds (self):
-        return int(self % 60)
-
-    @property
-    def Aminutes (self):
-        return int(self.Asecounds // 60)
-    
-    @property
-    def minutes (self):
-        return int(self.Aminutes % 60)
-
-    @property
-    def Ahours (self):
-        return int(self.Aminutes // 60)
-    
-    @property
-    def hours (self):
-        return self.Ahours
+    if not down:
+        down = True
+        print('good bye :)')
+        checkexit()
 
 
-    def __sub__ (self,friend):
-        return (type(self))(float.__sub__(friend,float(self))) 
-    
-    def __add__ (self,friend):
-        return type(self)(float.__add__(float(self),friend))
-    
-    def __mul__ (self,other):
-        return type(self)(float.__mul__(float(self), other))
-    
-    def __pow__(self,other):
-        return type(self)(float.__pow__(float(self),other))
-    
-    def __mod__(self,other):
-        return type(self)(float.__mod__(float(self),other))
+try:
+    if __name__ == "__main__":
+        down = False
+        breakt = time.from_milisecounds(1)
+        _beeping=False    
+        Thread(target=_beep_thread).start()
+        main()
+except:
+    _exit()
+
+
+# 09391267690
+
+
