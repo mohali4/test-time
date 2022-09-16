@@ -1,7 +1,7 @@
 from sys import argv
 from threading import Thread
 from time import sleep
-from .model import time
+from model import time
 def beep():
     global _beeping
     _beeping = True
@@ -37,6 +37,7 @@ def main ():
 
         while test_start.delta_now < test_time :
             checkexit()
+            print_time()
             try:
                 sleep(breakt.float)
             except:
@@ -51,12 +52,19 @@ def checkexit():
         exit() 
 
 def _beep_thread():
-       
-    def beep(t=1):
+    try :
         import beepy
-        for _ in range(t): 
+        def _beep ():
             beepy.beep(sound=3)
+    except:
+        import os
+        def _beep():
+            os.system('play ~/beep.wav &> ~/null')
+    def beep(t=1):
+        for _ in range(t): 
+            _beep()
             checkexit()
+
 
     global _beeping
 
